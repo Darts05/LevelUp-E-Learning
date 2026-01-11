@@ -18,3 +18,24 @@ if (signupForm) {
         window.location.href = "login.html"; // Redirect to login
     });
 }
+
+const loginForm = document.getElementById('loginForm');
+
+if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        // "Look up" the user in our storage
+        const storedUser = JSON.parse(localStorage.getItem(email));
+
+        if (storedUser && storedUser.password === password) {
+            alert("Welcome back, " + storedUser.name + "!");
+            window.location.href = "../index.html";
+        } else {
+            alert("Invalid Email or Password!");
+        }
+    });
+}
