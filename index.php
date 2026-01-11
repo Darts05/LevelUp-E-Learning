@@ -64,7 +64,27 @@ if (!isset($_SESSION['user_id'])) {
 
         <section id="featured" class="content-section" style="padding: 50px; text-align: center;">
             <h2>Recent Quizzes</h2>
-            <p>Your database content will appear here soon.</p>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
+                <?php
+                // Fetch the 3 most recent quizzes
+                $sql = "SELECT * FROM quizzes ORDER BY created_at DESC LIMIT 3";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    while($row = $result->fetch_assoc()) {
+                        ?>
+                        <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px; width: 250px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            <h3 style="color: #333;"><?php echo htmlspecialchars($row['title']); ?></h3>
+                            <p style="color: #666;">Category: <?php echo htmlspecialchars($row['category']); ?></p>
+                            <a href="pages/take_quiz.php?quiz_id=<?php echo $row['id']; ?>" class="cta-main" style="display: inline-block; margin-top: 10px; text-decoration: none; font-size: 14px; padding: 8px 15px;">Take Quiz</a>
+                        </div>
+                        <?php
+                    }
+                } else {
+                    echo "<p>No quizzes available yet. Start by creating one!</p>";
+                }
+                ?>
+            </div>
         </section>
     </main>
 
