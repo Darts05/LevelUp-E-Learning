@@ -6,8 +6,10 @@
 
 body {
     font-family: 'Segoe UI', sans-serif;
-    background-color: var(--bg-light);
-    color: var(--primary-blue);
+    /* Soft gray-green bg */
+    background-color: rgba(244, 247, 246, 1); 
+    /* Dark Navy Blue text */
+    color: rgba(0, 31, 63, 1); 
 }
 
 /* Navbar Styling */
@@ -16,8 +18,8 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 1rem 5%;
-    background: var(--white);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    background: rgba(255, 255, 255, 1); /* White */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .nav-links {
@@ -28,19 +30,19 @@ body {
 
 .nav-links a {
     text-decoration: none;
-    color: var(--primary-blue);
+    color: rgba(0, 31, 63, 1); /* Primary Blue */
     font-weight: 600;
     transition: 0.3s;
 }
 
 .nav-links a:hover {
-    color: var(--accent-green);
+    color: rgba(46, 204, 113, 1); /* Accent Green */
 }
 
 /* Login Button Highlight */
 .btn-login {
-    background-color: var(--primary-blue);
-    color: white !important;
+    background-color: rgba(0, 31, 63, 1); /* Primary Blue */
+    color: rgba(255, 255, 255, 1) !important;
     padding: 0.5rem 1.5rem;
     border-radius: 5px;
 }
@@ -48,29 +50,29 @@ body {
 /* Login Page Specific Styles */
 .login-container {
     display: flex;
-    height: 100vh; /* Full screen height */
+    height: 100vh;
     width: 100%;
 }
 
 .login-sidebar {
     flex: 1;
-    background: linear-gradient(135deg, var(--primary-blue), #003366);
-    color: white;
+    background: linear-gradient(135deg, rgba(0, 31, 63, 1), rgba(0, 51, 102, 1));
+    color: rgba(255, 255, 255, 1);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px;
+    padding: 20px;
     text-align: center;
 }
 
-/* Hide sidebar on small screens (mobile) */
 @media (max-width: 768px) {
     .login-sidebar { display: none; }
 }
 
 .login-form-section {
     flex: 1;
-    background: var(--white);
+    background: rgba(255, 255, 255, 1); /* White */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -95,7 +97,7 @@ body {
 .input-group input {
     width: 100%;
     padding: 12px;
-    border: 1px solid #ddd;
+    border: 1px solid rgba(221, 221, 221, 1);
     border-radius: 6px;
     font-size: 1rem;
 }
@@ -103,8 +105,8 @@ body {
 .login-btn {
     width: 100%;
     padding: 12px;
-    background-color: var(--accent-green);
-    color: white;
+    background-color: rgba(46, 204, 113, 1); /* Accent Green */
+    color: rgba(255, 255, 255, 1);
     border: none;
     border-radius: 6px;
     font-size: 1.1rem;
@@ -114,6 +116,20 @@ body {
 }
 
 .login-btn:hover {
-    background-color: #27ae60;
+    background-color: rgba(39, 174, 96, 1); /* Darker Green */
     transform: translateY(-2px);
+}
+
+.forgot-link, 
+.signup-text a {
+    color: rgba(0, 31, 63, 1); /* Start with your Primary Blue */
+    text-decoration: none;
+    transition: color 0.3s ease; /* This makes the hover look professional */
+}
+
+.login-logo {
+    width: 500px; /* Adjust this size as needed */
+    height: auto;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 10px rgba(46, 204, 113, 0.3));
 }
