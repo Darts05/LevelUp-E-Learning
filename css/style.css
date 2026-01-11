@@ -56,13 +56,13 @@ body {
 
 .login-sidebar {
     flex: 1;
-    background: linear-gradient(135deg, rgba(0, 31, 63, 1), rgba(0, 51, 102, 1));
-    color: rgba(255, 255, 255, 1);
+    background-color: #001f3f;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    padding: 20px;
+    align-items: center;
+    padding: 40px;
+    color: white;
     text-align: center;
 }
 
@@ -72,20 +72,32 @@ body {
 
 .login-form-section {
     flex: 1;
-    background: rgba(255, 255, 255, 1); /* White */
     display: flex;
-    align-items: center;
     justify-content: center;
-    padding: 40px;
+    align-items: center;
+    background-color: white;
 }
 
 .login-form {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    max-width: 400px;
+    max-width: 350px;
+}
+
+.login-form input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
 }
 
 .input-group {
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 15px;
+    text-align: left;
 }
 
 .input-group label {
@@ -96,16 +108,14 @@ body {
 
 .input-group input {
     width: 100%;
-    padding: 12px;
-    border: 1px solid rgba(221, 221, 221, 1);
-    border-radius: 6px;
-    font-size: 1rem;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 .login-btn {
     width: 100%;
     padding: 12px;
-    background-color: rgba(46, 204, 113, 1); /* Accent Green */
+    background-color: rgba(46, 204, 113, 1);
     color: rgba(255, 255, 255, 1);
     border: none;
     border-radius: 6px;
@@ -131,5 +141,5 @@ body {
     width: 500px; /* Adjust this size as needed */
     height: auto;
     margin-bottom: 20px;
-    filter: drop-shadow(0 0 10px rgba(46, 204, 113, 0.3));
+    filter: drop-shadow(0 0 10px rgba(46, 204, 113, 0.3));    
 }
