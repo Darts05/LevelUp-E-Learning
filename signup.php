@@ -6,12 +6,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $pass = $_POST['password'];
 
-    $sql = "INSERT INTO users (full_name, email, password) VALUES ('$name', '$email', '$pass')";
+    $checkEmail = "SELECT * FROM users WHERE email = '$email'";
+    $result = $conn->query($checkEmail);
 
-    if ($conn->query($sql) === TRUE) {
-        echo "<script>alert('Registration Successful!'); window.location.href='pages/login.html';</script>";
+    if ($result->num_rows > 0) {
+        echo "<script>alert('This email is already registered! Please use another.'); window.location.href='pages/signup.html';</script>";
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        $sql = "INSERT INTO users (full_name, email, password) VALUES ('$name', '$email', '$pass')";
+
+        if ($conn->query($sql) === TRUE) {
+            echo "<script>alert('Registration Successful!'); window.location.href='pages/login.html';</script>";
+        } else {
+            echo "Error: " . $conn->error;
+        }
     }
 }
 ?>

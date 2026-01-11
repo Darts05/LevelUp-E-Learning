@@ -6,9 +6,7 @@
 
 body {
     font-family: 'Segoe UI', sans-serif;
-    /* Soft gray-green bg */
     background-color: rgba(244, 247, 246, 1); 
-    /* Dark Navy Blue text */
     color: rgba(0, 31, 63, 1); 
 }
 
@@ -30,18 +28,18 @@ body {
 
 .nav-links a {
     text-decoration: none;
-    color: rgba(0, 31, 63, 1); /* Primary Blue */
+    color: rgba(0, 31, 63, 1);
     font-weight: 600;
     transition: 0.3s;
 }
 
 .nav-links a:hover {
-    color: rgba(46, 204, 113, 1); /* Accent Green */
+    color: rgba(46, 204, 113, 1);
 }
 
 /* Login Button Highlight */
 .btn-login {
-    background-color: rgba(0, 31, 63, 1); /* Primary Blue */
+    background-color: rgba(0, 31, 63, 1);
     color: rgba(255, 255, 255, 1) !important;
     padding: 0.5rem 1.5rem;
     border-radius: 5px;
@@ -126,19 +124,19 @@ body {
 }
 
 .login-btn:hover {
-    background-color: rgba(39, 174, 96, 1); /* Darker Green */
+    background-color: rgba(39, 174, 96, 1);
     transform: translateY(-2px);
 }
 
 .forgot-link, 
 .signup-text a {
-    color: rgba(0, 31, 63, 1); /* Start with your Primary Blue */
+    color: rgba(0, 31, 63, 1);
     text-decoration: none;
-    transition: color 0.3s ease; /* This makes the hover look professional */
+    transition: color 0.3s ease;
 }
 
 .login-logo {
-    width: 500px; /* Adjust this size as needed */
+    width: 500px;
     height: auto;
     margin-bottom: 20px;
     filter: drop-shadow(0 0 10px rgba(46, 204, 113, 0.3));    
