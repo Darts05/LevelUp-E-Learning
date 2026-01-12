@@ -1,6 +1,7 @@
+<?php include 'includes/header.php'; ?>
+
 <?php
 session_start();
-
 if (!isset($_SESSION['user_id'])) {
     header("Location: pages/login.html");
     exit();
@@ -14,42 +15,8 @@ if (!isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LevelUp | Dashboard</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .user-greeting {
-            color: #4CAF50;
-            font-weight: bold;
-            margin-right: 15px;
-        }
-        .logout-btn {
-            background-color: #ff4b2b;
-            color: white !important;
-            padding: 8px 15px;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-        .logout-btn:hover {
-            background-color: #e63e1f;
-        }
-    </style>
 </head>
 <body>
-
-    <header>
-        <nav class="navbar">
-            <div class="logo">
-                <img src="assets/LevelUp-Logo.png" alt="LevelUp Logo" height="50">
-                <span>LevelUp</span>
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.php">Dashboard</a></li>
-                <li><a href="pages/search.html">Search Quizzes</a></li>
-                <li><a href="pages/about.html">About</a></li>
-                
-                <li class="user-greeting">Hi, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</li>
-                <li><a href="logout.php" class="logout-btn">Logout</a></li>
-            </ul>
-        </nav>
-    </header>
 
     <main>
         <section class="hero">
@@ -57,7 +24,10 @@ if (!isset($_SESSION['user_id'])) {
             <p>Your learning journey continues. Ready to beat your high score today?</p>
             
             <div class="hero-btns">
-                <a href="pages/search.html" class="cta-main">Start a Quiz</a>
+                <div class="user-actions">
+                    <a href="create_quiz.php" class="cta-main">Start a New Quiz</a>
+                    <a href="pages/my_quizzes.php" style="margin-left: 15px; color: #007bff; text-decoration: none;">Manage My Quizzes</a>
+                </div>
                 <a href="#featured" class="cta-sub">View My Progress</a>
             </div>
         </section>
@@ -67,7 +37,6 @@ if (!isset($_SESSION['user_id'])) {
             <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
                 <?php
                 include 'db_connect.php';
-                // Fetch the 3 most recent quizzes
                 $sql = "SELECT * FROM quizzes ORDER BY created_at DESC LIMIT 3";
                 $result = $conn->query($sql);
 
