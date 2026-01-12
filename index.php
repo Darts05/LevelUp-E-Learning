@@ -66,6 +66,7 @@ if (!isset($_SESSION['user_id'])) {
             <h2>Recent Quizzes</h2>
             <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
                 <?php
+                include 'db_connect.php';
                 // Fetch the 3 most recent quizzes
                 $sql = "SELECT * FROM quizzes ORDER BY created_at DESC LIMIT 3";
                 $result = $conn->query($sql);
