@@ -2,9 +2,14 @@
 session_start();
 include 'db_connect.php';
 
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $title = $_POST['quiz_title'];
-    $category = $_POST['category'];
+    $title = $conn->real_escape_string($_POST['quiz_title']);
+    $category = $conn->real_escape_string($_POST['category']);
     $user_id = $_SESSION['user_id'];
 
     // Insert the quiz header into the 'quizzes' table
@@ -13,11 +18,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($conn->query($sql) === TRUE) {
         $last_id = $conn->insert_id;
         
-        // Redirect to the question-adding page, passing the ID in the URL
-        header("Location: add_questions.php?quiz_id=" . $last_id);
+        header("Location: add_question.php?quiz_id=" . $last_id);
         exit();
     } else {
-        echo "Error: " . $conn->error;
+        echo "Error creating quiz: " . $conn->error;
     }
+} else {
+    header("Location: create_quiz.php");
+    exit();
 }
 ?>

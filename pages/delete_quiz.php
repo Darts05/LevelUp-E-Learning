@@ -1,10 +1,13 @@
-<?php include '../includes/header.php'; ?>
-
 <?php
 session_start();
 include '../db_connect.php';
 
-if (isset($_GET['id']) && isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+if (isset($_GET['id'])) {
     $quiz_id = $_GET['id'];
     $user_id = $_SESSION['user_id'];
 
@@ -13,10 +16,12 @@ if (isset($_GET['id']) && isset($_SESSION['user_id'])) {
 
     if ($conn->query($sql) === TRUE) {
         header("Location: my_quizzes.php?msg=deleted");
+        exit();
     } else {
         echo "Error deleting record: " . $conn->error;
     }
 } else {
     header("Location: my_quizzes.php");
+    exit();
 }
 ?>

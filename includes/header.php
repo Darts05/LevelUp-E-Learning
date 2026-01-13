@@ -1,5 +1,14 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+//Smart Path Logic
 $path_prefix = file_exists('db_connect.php') ? '' : '../';
+
+if (!isset($conn)) {
+    include $path_prefix . 'db_connect.php';
+}
 ?>
 <style>
     .navbar {
@@ -20,8 +29,16 @@ $path_prefix = file_exists('db_connect.php') ? '' : '../';
         color: white !important;
         padding: 8px 15px;
         border-radius: 5px;
+        text-decoration: none;
     }
     .logout-btn:hover { background-color: #e63e1f; }
+    
+    .search-container {
+        display: flex;
+        justify-content: center;
+        padding-bottom: 10px;
+        background: #fff;
+    }
 </style>
 
 <header>
@@ -32,7 +49,6 @@ $path_prefix = file_exists('db_connect.php') ? '' : '../';
         </div>
         <ul class="nav-links">
             <li><a href="<?php echo $path_prefix; ?>index.php">Dashboard</a></li>
-            <li><a href="<?php echo $path_prefix; ?>pages/search.html">Search Quizzes</a></li>
             <li><a href="<?php echo $path_prefix; ?>pages/about.html">About</a></li>
             
             <?php if(isset($_SESSION['user_name'])): ?>
@@ -44,4 +60,11 @@ $path_prefix = file_exists('db_connect.php') ? '' : '../';
             <?php endif; ?>
         </ul>
     </nav>
+    
+    <div class="search-container">
+        <form action="<?php echo $path_prefix; ?>pages/search_results.php" method="GET" style="display: flex; gap: 5px;">
+            <input type="text" name="query" placeholder="Search quizzes..." style="padding: 5px 10px; border-radius: 5px; border: 1px solid #ddd;">
+            <button type="submit" style="background: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Go</button>
+        </form>
+    </div>
 </header>
