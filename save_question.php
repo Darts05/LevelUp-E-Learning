@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($conn->query($sql) === TRUE) {
         if ($action == "another") {
             // Keep adding questions to the same quiz
-            header("Location: add_question.php?quiz_id=" . $quiz_id);
+            header("Location: add_questions.php?quiz_id=" . $quiz_id);
         } else {
             // Success alert and redirect to dashboard
             echo "<script>alert('Quiz successfully published!'); window.location.href='index.php';</script>";

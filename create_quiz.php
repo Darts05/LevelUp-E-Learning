@@ -45,7 +45,7 @@ if (!isset($_SESSION['user_id'])) {
             </button>
             
             <p style="text-align: center; margin-top: 20px;">
-                <a href="index.php" style="color: #999; text-decoration: none; font-size: 14px;">← Cancel and go back</a>
+                <a href="pages/my_quizzes.php" style="color: #999; text-decoration: none; font-size: 14px;">← Cancel and go back</a>
             </p>
         </form>
     </div>

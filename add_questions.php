@@ -60,6 +60,13 @@ $quiz_id = $conn->real_escape_string($_GET['quiz_id']);
                 
                 <button type="submit" name="action" value="finish" class="login-btn" style="flex: 1; background-color: #28a745; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold;">Finish & Publish</button>
             </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>Add Questions to Quiz</h2>
+                <div style="background: #4CAF50; color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold;">
+                    Questions Added: <span id="questionCount">1</span>
+                </div>
+            </div>
         </form>
     </div>
 </body>

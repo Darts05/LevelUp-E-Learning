@@ -31,23 +31,6 @@ if (count($q_array) == 0) {
     <meta charset="UTF-8">
     <title>LevelUp Quiz</title>
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        .quiz-container { max-width: 600px; margin: 50px auto; padding: 20px; background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); text-align: center; }
-        .question-box { display: none; }
-        .question-box.active { display: block; animation: fadeIn 0.5s; }
-        .option-btn { 
-            display: block; width: 100%; padding: 15px; margin: 10px 0; 
-            border: 2px solid #ddd; border-radius: 10px; cursor: pointer; background: white;
-            transition: 0.3s; font-size: 16px; font-family: inherit;
-        }
-        .option-btn:hover:not(:disabled) { border-color: #4CAF50; background: #f9f9f9; }
-        .correct { background-color: #d4edda !important; border-color: #28a745 !important; color: #155724; font-weight: bold; }
-        .wrong { background-color: #f8d7da !important; border-color: #dc3545 !important; color: #721c24; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .progress-bar { height: 10px; background: #eee; border-radius: 5px; margin-bottom: 30px; overflow: hidden; }
-        #progress-fill { height: 100%; background: #4CAF50; width: 0%; transition: 0.4s; }
-    </style>
 </head>
 <body>
     <?php include '../includes/header.php'; ?>
@@ -78,21 +61,32 @@ if (count($q_array) == 0) {
         </form>
     </div>
 
+    <div id="gameOverlay">
+        <div class="game-card">
+            <h2 class="game-title">🎮 BRAIN BREAK! 🎮</h2>
+            <p class="game-instructions">Tap the moving circle 5 times to continue.</p>
+            <div id="gameTarget"></div>
+            <p style="font-size: 18px; font-weight: bold;">
+                Clicks left: <span id="clickCount" style="color: #4CAF50;">5</span>
+            </p>
+        </div>
+    </div>
+
     <script>
         let currentQ = 0;
         let score = 0;
+        let clicksNeeded = 5;
         const totalQ = <?php echo count($q_array); ?>;
 
         function updateProgress() {
-            const percent = ((currentQ + 1) / totalQ) * 100;
+            const percent = ((currentQ) / totalQ) * 100;
             document.getElementById('progress-fill').style.width = percent + '%';
         }
 
         function checkAnswer(btn, selected, correct, index) {
             let box = document.getElementById('q-' + index);
             let buttons = box.querySelectorAll('.option-btn');
-            
-            // Disable all buttons so user can't click twice
+    
             buttons.forEach(b => b.disabled = true);
 
             if (selected === correct) {
@@ -100,25 +94,58 @@ if (count($q_array) == 0) {
                 score++;
             } else {
                 btn.classList.add('wrong');
-                // Highlight the actual correct answer
                 const optionMapping = { 'A': 0, 'B': 1, 'C': 2, 'D': 3 };
                 buttons[optionMapping[correct]].classList.add('correct');
             }
-
             setTimeout(() => {
-                box.classList.remove('active');
-                currentQ++;
-                if (currentQ < totalQ) {
-                    updateProgress();
-                    document.getElementById('q-' + currentQ).classList.add('active');
+        
+                if ((currentQ + 1) % 3 === 0 && currentQ < totalQ - 1) {
+                    showMiniGame();
                 } else {
-                    document.getElementById('score-input').value = score;
-                    document.getElementById('final-form').submit();
+                    proceedToNext();
                 }
-            }, 1500);
+            }, 1000);
+        }
+        function showMiniGame() {
+            const overlay = document.getElementById('gameOverlay');
+            const target = document.getElementById('gameTarget');
+            const counter = document.getElementById('clickCount');
+    
+            overlay.style.display = 'flex'; 
+    
+            clicksNeeded = 5;
+            counter.innerText = clicksNeeded;
+
+            target.onclick = function() {
+                clicksNeeded--;
+                counter.innerText = clicksNeeded;
+        
+                const x = Math.random() * 200 - 100;
+                const y = Math.random() * 200 - 100;
+                target.style.transform = `translate(${x}px, ${y}px)`;
+
+                if (clicksNeeded <= 0) {
+                    overlay.style.display = 'none';
+                    proceedToNext();
+                }
+            };
         }
 
-        // Initialize progress bar
+        function proceedToNext() {
+            let box = document.getElementById('q-' + currentQ);
+            box.classList.remove('active');
+            currentQ++;
+            
+            if (currentQ < totalQ) {
+                updateProgress();
+                document.getElementById('q-' + currentQ).classList.add('active');
+            } else {
+                document.getElementById('progress-fill').style.width = '100%';
+                document.getElementById('score-input').value = score;
+                document.getElementById('final-form').submit();
+            }
+        }
+
         updateProgress();
     </script>
 </body>

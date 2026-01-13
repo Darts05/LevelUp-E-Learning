@@ -11,10 +11,11 @@ if (isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <title>Login | LevelUp</title>
-    <link rel="stylesheet" href="css/style.css"> </head>
+    <link rel="stylesheet" href="css/style.css">
+</head>
 <body>
     <div class="login-container">
-        <div class="login-sidebar">
+        <div class="login-sidebar" style="background: #4CAF50;">
             <div class="sidebar-content">
                 <img src="assets/LevelUp-Logo.png" alt="Logo" class="login-logo">
                 <h1>LevelUp</h1>
@@ -27,7 +28,7 @@ if (isset($_SESSION['user_id'])) {
                 <h2>Welcome Back</h2>
 
                 <?php if(isset($_GET['error'])): ?>
-                    <div style="background: #fee2e2; color: #dc2626; padding: 10px; border-radius: 5px; margin-bottom: 15px; border: 1px solid #fecaca;">
+                    <div style="background: #fee2e2; color: #dc2626; padding: 10px; border-radius: 5px; margin-bottom: 15px; border: 1px solid #fecaca; font-size: 14px;">
                         Invalid Email or Password.
                     </div>
                 <?php endif; ?>
@@ -39,7 +40,10 @@ if (isset($_SESSION['user_id'])) {
 
                 <div class="input-group">
                     <label>Password</label>
-                    <input type="password" name="password" placeholder="••••••••" required>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <input type="password" name="password" id="password" placeholder="••••••••" required style="width: 100%; padding-right: 40px;">
+                        <span id="togglePassword" style="position: absolute; right: 10px; cursor: pointer; user-select: none; font-size: 18px;">👁️</span>
+                    </div>
                 </div>
 
                 <button type="submit" class="login-btn">Sign In</button>
@@ -47,5 +51,19 @@ if (isset($_SESSION['user_id'])) {
             </form>
         </div>
     </div>
+
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const passwordInput = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function () {
+            // Toggle the type attribute
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Toggle the icon/text
+            this.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+    </script>
 </body>
 </html>

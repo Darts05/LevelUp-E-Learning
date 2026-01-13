@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($conn->query($sql) === TRUE) {
         $last_id = $conn->insert_id;
         
-        header("Location: add_question.php?quiz_id=" . $last_id);
+        header("Location: add_questions.php?quiz_id=" . $last_id);
         exit();
     } else {
         echo "Error creating quiz: " . $conn->error;

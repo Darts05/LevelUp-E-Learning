@@ -16,15 +16,16 @@ include 'db_connect.php';
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <?php $path_prefix = ""; ?>
     <?php include 'includes/header.php'; ?>
     
     <main style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px; padding: 40px 5%;">
         <section>
             <div class="hero" style="text-align: left; padding: 0;">
                 <h1>Ready to <span class="highlight">LevelUp?</span></h1>
-                <p>Select a quiz below or search for a specific topic in the header.</p>
+                <p>Select a quiz below or go to <a href="pages/browse.php" style="color: #4CAF50; font-weight: bold; text-decoration: none;">Browse Quizzes</a> to search for a specific topic.</p>
             </div>
-        
+            
             <div id="featured" style="margin-top: 30px;">
                 <h2 style="margin-bottom: 20px;">Top Quizzes</h2>
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;">
@@ -61,5 +62,11 @@ include 'db_connect.php';
             <a href="pages/progress.php" style="color: #007bff; text-decoration: none; font-size: 14px; font-weight: bold;">View Detailed Progress →</a>
         </aside>
     </main>
+    <?php if (isset($_SESSION['show_welcome'])): ?>
+    <script>
+        alert("Welcome back, <?php echo $_SESSION['user_name']; ?>!");
+    </script>
+    <?php unset($_SESSION['show_welcome']); ?>
+<?php endif; ?>
 </body>
 </html>

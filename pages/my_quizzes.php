@@ -21,6 +21,7 @@ $result = $conn->query($sql);
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+    <?php $path_prefix = "../"; ?>
     <?php include '../includes/header.php'; ?>
 
     <div class="main-container" style="max-width: 900px; margin: 40px auto; padding: 20px;">
