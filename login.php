@@ -19,7 +19,7 @@ if (isset($_SESSION['user_id'])) {
             <div class="sidebar-content">
                 <img src="assets/LevelUp-Logo.png" alt="Logo" class="login-logo">
                 <h1>LevelUp</h1>
-                <p>Knowledge grows when shared. Ready to test yourself?</p>
+                <p>You're one level away from your greatness. Ready to test yourself?</p>
             </div>
         </div>
 
