@@ -8,20 +8,23 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 if (isset($_GET['id']) && isset($_GET['quiz_id'])) {
-    $q_id = $_GET['id'];
-    $quiz_id = $_GET['quiz_id'];
+    $q_id = intval($_GET['id']);
+    $quiz_id = intval($_GET['quiz_id']);
     $user_id = $_SESSION['user_id'];
 
-    // Security check: Make sure the user owns the quiz this question belongs to
-    $check_ownership = "SELECT user_id FROM quizzes WHERE id = $quiz_id";
-    $result = $conn->query($check_ownership);
+    // Security check: Use a prepared statement to check ownership
+    $check_stmt = $conn->prepare("SELECT user_id FROM quizzes WHERE id = ?");
+    $check_stmt->bind_param("i", $quiz_id);
+    $check_stmt->execute();
+    $result = $check_stmt->get_result();
     $row = $result->fetch_assoc();
 
     if ($row && $row['user_id'] == $user_id) {
-        // User owns the quiz, proceed with deleting the question
-        $sql = "DELETE FROM questions WHERE id = $q_id AND quiz_id = $quiz_id";
+        // User owns the quiz, proceed with deleting the question using prepared statement
+        $del_stmt = $conn->prepare("DELETE FROM questions WHERE id = ? AND quiz_id = ?");
+        $del_stmt->bind_param("ii", $q_id, $quiz_id);
 
-        if ($conn->query($sql) === TRUE) {
+        if ($del_stmt->execute()) {
             header("Location: edit_quiz.php?id=" . $quiz_id . "&msg=q_deleted");
             exit();
         } else {

@@ -67,7 +67,9 @@ $questions = $conn->query("SELECT * FROM questions WHERE quiz_id = $quiz_id");
 
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h3 style="margin: 0;">Questions</h3>
-                <a href="../add_questions.php?quiz_id=<?php echo $quiz_id; ?>" style="background: #001f3f; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; font-size: 14px;">+ Add Question</a>
+                <a href="../add_questions.php?quiz_id=<?php echo $quiz_id; ?>&from=edit" 
+                    style="background: #001f3f; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; font-size: 14px;">+ Add Question
+                </a>
             </div>
 
             <div style="margin-bottom: 40px;">

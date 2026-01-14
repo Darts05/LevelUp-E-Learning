@@ -16,17 +16,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $option_d      = $conn->real_escape_string($_POST['option_d']);
     $correct       = $conn->real_escape_string($_POST['correct_answer']);
     $action        = $_POST['action'];
+    
+    $source        = isset($_POST['source']) ? $_POST['source'] : 'create';
 
     $sql = "INSERT INTO questions (quiz_id, question_text, option_a, option_b, option_c, option_d, correct_answer) 
             VALUES ('$quiz_id', '$question_text', '$option_a', '$option_b', '$option_c', '$option_d', '$correct')";
 
     if ($conn->query($sql) === TRUE) {
         if ($action == "another") {
-            // Keep adding questions to the same quiz
-            header("Location: add_questions.php?quiz_id=" . $quiz_id);
+            header("Location: add_questions.php?quiz_id=" . $quiz_id . "&from=" . $source);
         } else {
-            // Success alert and redirect to dashboard
-            echo "<script>alert('Quiz successfully published!'); window.location.href='index.php';</script>";
+            if ($source === 'edit') {
+                header("Location: pages/edit_quiz.php?id=" . $quiz_id . "&msg=updated");
+            } else {
+                echo "<script>alert('Quiz successfully published!'); window.location.href='index.php';</script>";
+            }
         }
         exit();
     } else {

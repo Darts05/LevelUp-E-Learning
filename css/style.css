@@ -221,3 +221,15 @@ body {
 .cancel-link:hover {
     color: #ff4b2b;
 }
+
+.quiz-form textarea, .quiz-form input[type="text"], .quiz-form select {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 15px;
+    transition: border-color 0.3s;
+}
+
+.quiz-form textarea:focus, .quiz-form input:focus {
+    border-color: #4CAF50;
+    outline: none;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
+}
