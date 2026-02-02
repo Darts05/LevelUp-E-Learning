@@ -6,6 +6,11 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
+
+if (!isset($_SESSION['role']) || $_SESSION['role'] != 1) {
+    header("Location: index.php?error=unauthorized");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>

@@ -12,6 +12,11 @@ if (!isset($_GET['quiz_id'])) {
     exit();
 }
 
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 1) {
+    header("Location: login.php");
+    exit();
+}
+
 $quiz_id = $conn->real_escape_string($_GET['quiz_id']);
 
 $source = isset($_GET['from']) ? $_GET['from'] : 'create';

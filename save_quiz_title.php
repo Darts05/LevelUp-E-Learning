@@ -2,7 +2,7 @@
 session_start();
 include 'db_connect.php';
 
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 1) {
     header("Location: login.php");
     exit();
 }
@@ -12,8 +12,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $category = $conn->real_escape_string($_POST['category']);
     $user_id = $_SESSION['user_id'];
 
-    // Insert the quiz header into the 'quizzes' table
-    $sql = "INSERT INTO quizzes (user_id, title, category) VALUES ('$user_id', '$title', '$category')";
+    $sql = "INSERT INTO quizzes (user_id, title, category, is_published) 
+            VALUES ('$user_id', '$title', '$category', 0)";
 
     if ($conn->query($sql) === TRUE) {
         $last_id = $conn->insert_id;

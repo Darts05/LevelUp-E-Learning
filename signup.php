@@ -5,7 +5,10 @@ include 'db_connect.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $conn->real_escape_string($_POST['full_name']);
     $email = $conn->real_escape_string($_POST['email']);
-    $pass = $_POST['password'];
+    $role = intval($_POST['role']); // Capture the role (0 or 1)
+    
+    // Security: Hash the password before saving
+    $pass = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
     $checkEmail = "SELECT * FROM users WHERE email = '$email'";
     $result = $conn->query($checkEmail);
@@ -14,7 +17,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<script>alert('This email is already registered!'); window.location.href='signup.php';</script>";
         exit();
     } else {
-        $sql = "INSERT INTO users (full_name, email, password) VALUES ('$name', '$email', '$pass')";
+        // Updated SQL to include the 'role' column
+        $sql = "INSERT INTO users (full_name, email, password, role) VALUES ('$name', '$email', '$pass', '$role')";
 
         if ($conn->query($sql) === TRUE) {
             echo "<script>alert('Registration Successful! Please Login.'); window.location.href='login.php';</script>";
@@ -32,6 +36,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <title>Sign Up | LevelUp</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Small style tweak for the role dropdown to match your UI */
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
     <div class="login-container">
@@ -60,6 +75,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="input-group">
                     <label>Password</label>
                     <input type="password" name="password" placeholder="••••••••" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="role">Account Type</label>
+                    <select name="role" id="role" required>
+                        <option value="0">Student</option>
+                        <option value="1">Teacher</option>
+                    </select>
                 </div>
     
                 <button type="submit" class="login-btn" style="background: #4CAF50;">Register</button>

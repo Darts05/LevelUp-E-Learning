@@ -26,10 +26,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($action == "another") {
             header("Location: add_questions.php?quiz_id=" . $quiz_id . "&from=" . $source);
         } else {
-            if ($source === 'edit') {
-                header("Location: pages/edit_quiz.php?id=" . $quiz_id . "&msg=updated");
-            } else {
+            if ($source !== 'edit') {
+                $publish_sql = "UPDATE quizzes SET is_published = 1 WHERE id = '$quiz_id'";
+                $conn->query($publish_sql);
+                
                 echo "<script>alert('Quiz successfully published!'); window.location.href='index.php';</script>";
+            } else {
+                header("Location: pages/edit_quiz.php?id=" . $quiz_id . "&msg=updated");
             }
         }
         exit();

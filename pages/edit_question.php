@@ -40,7 +40,7 @@ if (!$q) {
             <a href="edit_quiz.php?id=<?php echo $q['quiz_id']; ?>" style="color: #666; text-decoration: none;">← Back to Quiz</a>
         </div>
 
-        <form action="update_question_process.php" method="POST" class="quiz-form">
+        <form action="update_question_logic.php" method="POST" class="quiz-form">
             <input type="hidden" name="question_id" value="<?php echo $q_id; ?>">
             <input type="hidden" name="quiz_id" value="<?php echo $q['quiz_id']; ?>">
 
