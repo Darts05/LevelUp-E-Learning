@@ -5,10 +5,9 @@ include 'db_connect.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $conn->real_escape_string($_POST['full_name']);
     $email = $conn->real_escape_string($_POST['email']);
-    $role = intval($_POST['role']); // Capture the role (0 or 1)
+    $role = intval($_POST['role']);
     
-    // Security: Hash the password before saving
-    $pass = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $pass = $conn->real_escape_string($_POST['password']);
 
     $checkEmail = "SELECT * FROM users WHERE email = '$email'";
     $result = $conn->query($checkEmail);
@@ -17,7 +16,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<script>alert('This email is already registered!'); window.location.href='signup.php';</script>";
         exit();
     } else {
-        // Updated SQL to include the 'role' column
         $sql = "INSERT INTO users (full_name, email, password, role) VALUES ('$name', '$email', '$pass', '$role')";
 
         if ($conn->query($sql) === TRUE) {
@@ -37,7 +35,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Sign Up | LevelUp</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* Small style tweak for the role dropdown to match your UI */
         select {
             width: 100%;
             padding: 10px;

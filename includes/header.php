@@ -21,26 +21,32 @@ if (!isset($conn)) {
         </div>
         <ul class="nav-links">
             <li><a href="<?php echo $path_prefix; ?>index.php">Dashboard</a></li>
-    
+
             <?php if(isset($_SESSION['user_name'])): ?>
-                <li><a href="<?php echo $path_prefix; ?>pages/my_quizzes.php">My Quizzes</a></li>
-                <li><a href="<?php echo $path_prefix; ?>pages/browse.php">Browse Quizzes</a></li>
-                <li><a href="<?php echo $path_prefix; ?>pages/leaderboard.php">Leaderboard</a></li>
         
+                <li><a href="<?php echo $path_prefix; ?>pages/my_groups.php">My Groups</a></li>
+
+                <?php if(isset($_SESSION['role']) && $_SESSION['role'] == 1): ?>
+                    <li><a href="<?php echo $path_prefix; ?>pages/my_quizzes.php">My Quizzes</a></li>
+                <?php endif; ?>
+
+                <li><a href="<?php echo $path_prefix; ?>pages/browse.php">Browse Quizzes</a></li>
+
                 <li class="user-dropdown">
                     <button class="dropbtn">Hi, <?php echo htmlspecialchars($_SESSION['user_name']); ?>! ▾</button>
                     <div class="dropdown-content">
+                        <a href="<?php echo $path_prefix; ?>pages/statistics.php">My Statistics</a>
                         <a href="<?php echo $path_prefix; ?>logout.php">Logout</a>
                         <a href="<?php echo $path_prefix; ?>delete_account.php" 
                            class="delete-acc"
-                           onclick="return confirm('CRITICAL WARNING: This will permanently delete your account and all your quizzes. Proceed?')">
+                           onclick="return confirm('WARNING: This will permanently delete your account. Proceed?')">
                            Delete Account
                         </a>
                     </div>
                 </li>
             <?php else: ?>
                 <li><a href="<?php echo $path_prefix; ?>login.php">Login</a></li>
-            <?php endif; ?>
+           <?php endif; ?>
         </ul>
     </nav>
 </header>

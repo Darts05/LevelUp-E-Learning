@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-$user_role = $_SESSION['role'];
+$user_role = $_SESSION['role'] ?? 0;
 ?>
 
 <!DOCTYPE html>
@@ -19,79 +19,140 @@ $user_role = $_SESSION['role'];
     <title>LevelUp | Dashboard</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body style="background-color: #f8f9fa;">
     <?php include 'includes/header.php'; ?>
     
-    <main style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px; padding: 40px 5%;">
+    <main style="display: grid; grid-template-columns: 2.5fr 1fr; gap: 30px; padding: 40px 5%; max-width: 1400px; margin: 0 auto;">
+        
         <section>
-            <div class="hero" style="text-align: left; padding: 0;">
-                <h1>Ready to <span class="highlight">LevelUp?</span></h1>
+            <div class="hero" style="background: linear-gradient(135deg, #4CAF50, #2E7D32); color: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 30px;">
+                <h1 style="margin: 0;">Ready to <span style="color: #FFD700;">LevelUp?</span></h1>
                 
                 <?php if ($user_role == 1): ?>
-                    <div class="teacher-controls" style="background: #f0fdf4; padding: 20px; border-radius: 12px; margin-top: 20px; border: 1px dashed #4CAF50;">
-                        <h3 style="color: #2e7d32; margin-top: 0;">Teacher Dashboard</h3>
-                        <p>Create new content or manage your existing quizzes.</p>
-                        <a href="create_quiz.php" class="btn" style="background: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;">+ Create New Quiz</a>
+                    <p style="margin-top: 10px; opacity: 0.9;">Welcome back, Teacher. Manage your classrooms or create new challenges for your students.</p>
+                    <div style="margin-top: 20px;">
+                        <a href="pages/create_quiz.php" style="background: white; color: #2E7D32; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-right: 10px;">+ Create Quiz</a>
+                        <a href="pages/my_groups.php" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; border: 1px solid white;">Manage Groups</a>
                     </div>
                 <?php else: ?>
-                    <p>Select a quiz below or go to <a href="pages/browse.php" style="color: #4CAF50; font-weight: bold; text-decoration: none;">Browse Quizzes</a> to search for a specific topic.</p>
+                    <p style="margin-top: 10px; opacity: 0.9;">Select a quiz from your joined classes or explore public topics.</p>
+                    <div style="margin-top: 20px;">
+                        <a href="pages/join_group.php" style="background: white; color: #2E7D32; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold;">+ Join a Class</a>
+                    </div>
                 <?php endif; ?>
             </div>
             
-            <div id="featured" style="margin-top: 30px;">
-                <h2 style="margin-bottom: 20px;">Top Quizzes</h2>
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;">
+            <div id="featured">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin: 0; color: #333;">Available Quizzes</h2>
+                    <a href="pages/browse.php" style="color: #4CAF50; text-decoration: none; font-size: 14px; font-weight: bold;">Browse All →</a>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
                     <?php 
-                    if ($user_role == 1) {
-                        $sql = "SELECT * FROM quizzes WHERE is_published = 1 OR user_id = $user_id ORDER BY created_at DESC LIMIT 6";
-                    } else {
-                        $sql = "SELECT * FROM quizzes WHERE is_published = 1 ORDER BY created_at DESC LIMIT 6";
-                    }
+                    /** * LOGIC: 
+                     * 1. Show 'open' visibility quizzes.
+                     * 2. Show quizzes assigned to a group the student has joined.
+                     * 3. Show a teacher their own quizzes (including private/drafts).
+                     */
+                    $sql = "SELECT DISTINCT q.*, u.full_name as teacher_name 
+                            FROM quizzes q
+                            JOIN users u ON q.user_id = u.id
+                            LEFT JOIN group_members gm ON q.group_id = gm.group_id AND gm.student_id = '$user_id'
+                            WHERE q.visibility = 'open' 
+                            OR gm.student_id = '$user_id' 
+                            OR q.user_id = '$user_id'
+                            ORDER BY q.created_at DESC";
                     
                     $quizzes = $conn->query($sql);
                     
-                    if($quizzes->num_rows > 0):
+                    if($quizzes && $quizzes->num_rows > 0):
                         while($row = $quizzes->fetch_assoc()): ?>
-                            <div style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eee; position: relative;">
+                            <div class="quiz-card" style="background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 5px solid #4CAF50; position: relative; transition: transform 0.2s;">
                                 
-                                <?php if($row['is_published'] == 0): ?>
-                                    <span style="position: absolute; top: 10px; right: 10px; font-size: 10px; background: #fff3e0; color: #ef6c00; padding: 2px 6px; border-radius: 4px;">Draft</span>
-                                <?php endif; ?>
+                                <div style="position: absolute; top: 15px; right: 15px; display: flex; gap: 5px;">
+                                    <?php if($row['is_published'] == 0): ?>
+                                        <span style="font-size: 10px; background: #FFF3E0; color: #EF6C00; padding: 3px 7px; border-radius: 4px; font-weight: bold;">DRAFT</span>
+                                    <?php endif; ?>
+                                    <?php if($row['visibility'] == 'link'): ?>
+                                        <span title="Code Required" style="font-size: 12px;">🔑</span>
+                                    <?php endif; ?>
+                                </div>
 
-                                <span style="font-size: 12px; background: #e8f5e9; color: #2e7d32; padding: 4px 8px; border-radius: 10px;"><?php echo htmlspecialchars($row['category']); ?></span>
-                                <h3 style="margin: 10px 0; font-size: 18px;"><?php echo htmlspecialchars($row['title']); ?></h3>
+                                <small style="color: #4CAF50; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; font-size: 11px;">
+                                    <?php echo htmlspecialchars($row['category']); ?>
+                                </small>
                                 
-                                <a href="pages/take_quiz.php?quiz_id=<?php echo $row['id']; ?>" style="display: inline-block; margin-top: 10px; color: #4CAF50; font-weight: bold; text-decoration: none;">
-                                    <?php echo ($user_role == 1 && $row['user_id'] == $user_id) ? "Preview Quiz →" : "Start Quiz →"; ?>
+                                <h3 style="margin: 10px 0; font-size: 19px; color: #333; min-height: 46px;">
+                                    <?php echo htmlspecialchars($row['title']); ?>
+                                </h3>
+                                
+                                <p style="color: #999; font-size: 13px; margin-bottom: 20px;">By <?php echo htmlspecialchars($row['teacher_name']); ?></p>
+                                
+                                <a href="pages/take_quiz.php?quiz_id=<?php echo $row['id']; ?>" class="btn-verify" style="display: block; text-align: center; text-decoration: none; padding: 12px; background: #4CAF50; color: white; border-radius: 8px; font-weight: bold;">
+                                    <?php echo ($user_role == 1 && $row['user_id'] == $user_id) ? "Preview" : "Start Quiz"; ?>
                                 </a>
                             </div>
                         <?php endwhile; 
                     else: ?>
-                        <p style="color: #888;">No quizzes available yet.</p>
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 50px; background: white; border-radius: 15px; border: 2px dashed #ddd;">
+                            <p style="color: #888; font-size: 16px;">No quizzes found for your groups. Join a class to see more!</p>
+                        </div>
                     <?php endif; ?>
                 </div>
             </div>
         </section>
 
-        <aside style="background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: fit-content;">
-            <h3 style="margin-bottom: 15px;">Quick Stats</h3>
-            <div style="margin-bottom: 20px;">
-                <p style="color: #666; font-size: 14px;">Total Quizzes Taken</p>
-                <span style="font-size: 24px; font-weight: bold; color: #4CAF50;">
-                    <?php 
-                        $count_res = $conn->query("SELECT COUNT(*) as total FROM results WHERE user_id = $user_id");
-                        $count_data = $count_res->fetch_assoc();
-                        echo $count_data['total'];
-                    ?>
-                </span>
+        <aside>
+            <div style="background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee;">
+                <h3 style="margin-bottom: 20px; color: #333; display: flex; align-items: center; gap: 10px;">
+                    📊 Quick Stats
+                </h3>
+                
+                <?php 
+                // Fetch stats for the sidebar
+                $stats_res = $conn->query("SELECT COUNT(*) as total, AVG(percentage) as avg_p FROM results WHERE user_id = '$user_id'");
+                $stats = $stats_res->fetch_assoc();
+                ?>
+
+                <div style="margin-bottom: 20px;">
+                    <p style="color: #888; font-size: 13px; margin-bottom: 5px;">Quizzes Completed</p>
+                    <span style="font-size: 32px; font-weight: bold; color: #4CAF50;"><?php echo $stats['total']; ?></span>
+                </div>
+
+                <?php if($user_role == 0): // Students see accuracy ?>
+                <div style="margin-bottom: 25px;">
+                    <p style="color: #888; font-size: 13px; margin-bottom: 5px;">Average Accuracy</p>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 32px; font-weight: bold; color: #2196F3;"><?php echo round($stats['avg_p'] ?? 0); ?>%</span>
+                    </div>
+                    <div style="width: 100%; height: 6px; background: #eee; border-radius: 3px; margin-top: 10px;">
+                        <div style="width: <?php echo $stats['avg_p'] ?? 0; ?>%; height: 100%; background: #2196F3; border-radius: 3px;"></div>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <a href="pages/statistics.php" style="display: block; text-align: center; padding: 12px; background: #f0f2f5; color: #333; text-decoration: none; border-radius: 10px; font-size: 14px; font-weight: bold; transition: background 0.3s;">
+                    View Full Report →
+                </a>
             </div>
-            <a href="pages/progress.php" style="color: #007bff; text-decoration: none; font-size: 14px; font-weight: bold;">View Detailed Progress →</a>
+
+            <?php if($user_role == 1): ?>
+                <div style="margin-top: 20px; background: #E8F5E9; padding: 20px; border-radius: 20px; border: 1px solid #C8E6C9;">
+                    <h4 style="color: #2E7D32; margin-top: 0;">Teacher Tip 💡</h4>
+                    <p style="font-size: 13px; color: #4E342E; line-height: 1.5;">Assign your quizzes to a <strong>Group</strong> to keep them private to your students!</p>
+                </div>
+            <?php endif; ?>
         </aside>
+
     </main>
 
     <?php if (isset($_SESSION['show_welcome'])): ?>
-        <script>alert("Welcome back!");</script>
-        <?php unset($_SESSION['show_welcome']); ?>
+        <script>
+            // A more modern welcome instead of alert if you prefer
+            console.log("Welcome back, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!");
+            <?php unset($_SESSION['show_welcome']); ?>
+        </script>
     <?php endif; ?>
 </body>
 </html>
